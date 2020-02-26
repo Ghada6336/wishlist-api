@@ -16,9 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from items import views
+from api import views as secondview
 from django.conf import settings
 from django.conf.urls.static import static
-
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 urlpatterns = [
     path('admin/', admin.site.urls),
 
@@ -29,6 +33,12 @@ urlpatterns = [
     path('user/register/', views.user_register, name='user-register'),
     path('user/login/', views.user_login, name='user-login'),
     path('user/logout/', views.user_logout, name='user-logout'),
+
+    path('login/', TokenObtainPairView.as_view(), name="api-login"),
+    path('register/', secondview.Register.as_view(), name="api-register"),
+
+    path('api/', secondview.ItemListView.as_view(), name="api-list"),
+    path('api/<int:item_id>/', secondview.ItemDetailView.as_view(), name="api-detail"),
 
     path('items/<int:item_id>/favorite/', views.item_favorite, name='item-favorite'),
 ]
